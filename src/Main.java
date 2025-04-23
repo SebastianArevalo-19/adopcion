@@ -1,15 +1,13 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 public class Main {
-    private static  List<Persona>personas = new ArrayList<>();
-    private static List<Perro>perrosDisponibles = new ArrayList<>();
-    private static  Scanner scanner = new Scanner(System.in);
+    private static List<Persona> personas = new ArrayList<>();
+    private static List<Perro> perrosDisponibles = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        while (true){
+        while (true) {
             System.out.println("Menu:");
             System.out.println("1.Registrar personas");
             System.out.println("2.Registrar perros");
@@ -19,10 +17,10 @@ public class Main {
             System.out.println("6.Consultar el perro mas viejo adoptado por una persona");
             System.out.println("7.Salir del programa");
 
-            System.out.print("Ingrese una opcion");
+            System.out.print("Ingrese una opcion:");
             int opcion = scanner.nextInt();
 
-            switch (opcion){
+            switch (opcion) {
                 case 1:
                     registrarPersona();
                     break;
@@ -30,21 +28,30 @@ public class Main {
                     registrarPerro();
                     break;
                 case 3:
-                    verPerrosDisponibles();
+                    verPersonaRegistradas();
                     break;
                 case 4:
-                    adoptarPerro();
+                    verPerrosDisponibles();
                     break;
                 case 5:
-                    consultarPerroMasViejo();
+                    adoptarPerro();
                     break;
                 case 6:
+                    consultarPerroMasViejo();
+                    break;
+                case 7:
+                  System.out.println("Saliendo del programa");
+                  return;
+                default:
+                    System.out.println("Opcion invalida, vuelvalo a intentar");
 
             }
 
         }
     }
-    private static void registrarPersona(){
+
+    public static void registrarPersona() {
+        scanner.nextLine();
         System.out.print("Ingrese  el nombre:");
         String nombre = scanner.nextLine();
         System.out.print("Ingrese  el apellido:");
@@ -58,7 +65,9 @@ public class Main {
         personas.add(new Persona(nombre, apellido, edad, documento));
         System.out.println("Persona registrada con exito");
     }
-    public static void registrarPerro(){
+
+    public static void registrarPerro() {
+        scanner.nextLine();
         System.out.print("Ingrese la placa");
         String placa = scanner.nextLine();
         System.out.print("Ingrese  el nombre:");
@@ -74,16 +83,75 @@ public class Main {
         perrosDisponibles.add(new Perro(placa, nombre, raza, edad, tamano));
         System.out.println("Perro registrado con exito");
     }
-    public static void verPerrosDisponibles(){
-        for(Perro perro: perrosDisponibles){
-            System.out.println("perro");
+
+    public static void verPersonaRegistradas() {
+        scanner.nextLine();
+        for (Persona persona : personas) {
+            System.out.println(persona);
         }
     }
-    private static  void adoptarPerro(){
+
+    public static void verPerrosDisponibles() {
+        scanner.nextLine();
+        for (Perro perro : perrosDisponibles) {
+            System.out.println(perro);
+        }
+    }
+
+    public static void adoptarPerro() {
+        scanner.nextLine();
+        System.out.println("Ingresar el documento de la persona:");
+        String documento = scanner.nextLine();
+        Persona persona = buscarPersona(documento);
+        if (persona != null) {
+            System.out.println("Ingrese la placa del perro");
+            String placa = scanner.nextLine();
+            Perro perro = buscarPerro(placa);
+            if (perro != null) {
+                persona.adoptarPerro(perro);
+                perrosDisponibles.remove(perro);
+            } else {
+                System.out.println("Perro no encontrado");
+            }
+        } else {
+            System.out.println("Persona no encontrado");
+        }
 
     }
-    public   static void  consultarPerroMasViejo(){
 
+    public static void consultarPerroMasViejo() {
+        scanner.nextLine();
+        System.out.println("Ingrese el doumento de la persona:");
+        String documento = scanner.nextLine();
+        Persona persona = buscarPersona(documento);
+        if (persona != null) {
+            Perro perroMasViejo = persona.perroMasGrande();
+            if (perroMasViejo != null) {
+                System.out.println(perroMasViejo);
+            } else {
+                System.out.println("La persona no tiene perros adoptados");
+            }
+        } else {
+            System.out.println("Perro no encontrada");
+        }
     }
+
+    public static Persona buscarPersona(String documento) {
+        for (Persona persona : personas) {
+            if (persona.getDocumento().equals(documento)) {
+                return persona;
+            }
+        }
+        return null;
+    }
+    public static Perro buscarPerro(String placa) {
+        for (Perro perro : perrosDisponibles) {
+            if (perro.getPlaca().equals(placa)) {
+                return perro;
+            }
+        }
+        return null;
+    }
+
 
 }
